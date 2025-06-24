@@ -1,13 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="10dp">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="5dp">
+        <EditText
+            android:id="@+id/editTextTodo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="할 일을 입력하세요"
+            android:textAlignment="center"
+            android:layout_weight="1"
+            android:layout_marginRight="10dp"/>
+        <Button
+            android:id="@+id/buttonAdd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#20B2AA"
+            android:text="추가"
+            android:layout_weight="2"/>
+    </LinearLayout>
 
+    <!--
+    Recyclerview: View를 재사용하는 Viewgroup
+        - 매번 View를 생성 및 삭제하는 Listview의 단점 보완
+        - 쉽게 말해 100개의 데이터면 Listview는 100개의 뷰를 생성/삭제 반복, Recyclerview는 10개의 뷰를 생성 후 재사용
+        - 요소
+            Adapter: 데이터와 RecyclerView 사이의 통신을 위한 연결체
+            ViewHolder: 화면에 표시될 데이터나 아이템들을 저장하는 역할
+        - RecyclerView는 화면에 보여지는 항목 개수만큼의 View와 ViewHolder를 생성
+    -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewTools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </androidx.recyclerview.widget.RecyclerView>
 </LinearLayout>

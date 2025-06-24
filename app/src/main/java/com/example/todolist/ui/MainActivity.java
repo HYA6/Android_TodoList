@@ -1,4 +1,4 @@
-package com.example.todolist;
+package com.example.todolist.ui;
 
 import android.os.Bundle;
 
@@ -10,7 +10,8 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.todolist.adapter.MyAdapter;
+import com.example.todolist.R;
+import com.example.todolist.data.Todo;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
-    MyAdapter adapter;
+    TodoAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,16 +32,16 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerViewTools);
 
         // 레이아웃 매니저 설정 (수직 리스트)
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // 데이터 준비
-        List<String> data = Arrays.asList("아이템 1", "아이템 2", "아이템 3", "아이템 4");
+//        List<Todo> data = Arrays.asList("아이템 1", "아이템 2", "아이템 3", "아이템 4");
 
         // 어댑터 연결
-        adapter = new MyAdapter(data);
-        recyclerView.setAdapter(adapter);
+//        adapter = new TodoAdapter(data);
+//        recyclerView.setAdapter(adapter);
     }
 }
