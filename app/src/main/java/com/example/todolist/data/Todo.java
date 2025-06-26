@@ -2,7 +2,7 @@ package com.example.todolist.data;
 
 public class Todo {
     private String content;
-    private boolean done;
+    private boolean done; // 할 일 끝냈는지 여부
 
     public Todo(String content, boolean done) {
         this.content = content;
@@ -11,4 +11,5 @@ public class Todo {
 
     public String getContent() { return content; }
     public boolean isDone() { return done; }
+    public void setDone(boolean done) { this.done = done; }
 }

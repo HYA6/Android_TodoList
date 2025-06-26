@@ -1,6 +1,9 @@
 package com.example.todolist.ui;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,35 +16,51 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.todolist.R;
 import com.example.todolist.data.Todo;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    RecyclerView recyclerView;
-    TodoAdapter adapter;
+    private EditText editTextTodo;
+    private Button buttonAdd;
+    private RecyclerView recyclerView;
+    private TodoAdapter adapter;
+
+    // 메모리 내 임시 리스트 (Room 없이)
+    private List<Todo> todoList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        setContentView(R.layout.activity_main); // activity_main 연결
 
-        recyclerView = findViewById(R.id.recyclerViewTools);
+        // UI 컴포넌트 연결
+        editTextTodo = findViewById(R.id.editTextTodo);
+        buttonAdd = findViewById(R.id.buttonAdd);
+        recyclerView = findViewById(R.id.recyclerViewTodos);
 
-        // 레이아웃 매니저 설정 (수직 리스트)
+        // RecyclerView 설정
+        adapter = new TodoAdapter(todoList);
+        recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // 데이터 준비
-//        List<Todo> data = Arrays.asList("아이템 1", "아이템 2", "아이템 3", "아이템 4");
-
-        // 어댑터 연결
-//        adapter = new TodoAdapter(data);
-//        recyclerView.setAdapter(adapter);
+        // 추가 버튼 클릭 이벤트
+        buttonAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String content = editTextTodo.getText().toString().trim();
+                if (!content.isEmpty()) {
+                    // 새 할 일 객체 추가
+                    Todo todo = new Todo(content, false);
+                    todoList.add(todo);
+                    // RecyclerView 갱신
+                    adapter.notifyItemInserted(todoList.size() - 1);
+                    // 입력창 비우기
+                    editTextTodo.setText("");
+                }
+            }
+        });
     }
 }

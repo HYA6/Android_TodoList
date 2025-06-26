@@ -39,7 +39,7 @@
         - RecyclerView는 화면에 보여지는 항목 개수만큼의 View와 ViewHolder를 생성
     -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewTools"
+        android:id="@+id/recyclerViewTodos"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </androidx.recyclerview.widget.RecyclerView>
