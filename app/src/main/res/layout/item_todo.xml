@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- recyclerview에 담을 xml 레이아웃 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="12dp">
 
-    <!-- 완료 체크박스 -->
     <CheckBox
         android:id="@+id/checkBoxDone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <!-- 할 일 내용 -->
     <TextView
         android:id="@+id/textViewContent"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:paddingStart="8dp"
-        android:text="할 일 내용"
-        android:textSize="16sp" />
-
+        android:text="할 일 텍스트 나올 곳"
+        android:textSize="16sp"
+        android:layout_marginStart="8dp" />
 </LinearLayout>

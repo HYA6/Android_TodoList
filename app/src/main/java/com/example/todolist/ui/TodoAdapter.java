@@ -29,14 +29,14 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
 
         public TodoViewHolder(@NonNull View view) {
             super(view);
-            checkBox = view.findViewById(R.id.checkBoxDone); // 체크박스 데이터 가져오기
-            textView = view.findViewById(R.id.editTextTodo); // 할 일 텍스트 데이터 가져오기
+            checkBox = view.findViewById(R.id.checkBoxDone); // item_todo.xml의 CheckBox 객체
+            textView = view.findViewById(R.id.textViewContent); // item_todo.xml의 TextView 객체
         }
 
         //bind() 함수는 해당 줄의 Todo 데이터를 화면에 세팅
         public void bind(Todo todo) {
-            textView.setText(todo.getContent());
-            checkBox.setChecked(todo.isDone());
+            textView.setText(todo.getContent()); // item_todo.xml의 CheckBox 객체에 Todo에 저장된 done 데이터 입력
+            checkBox.setChecked(todo.isDone()); // item_todo.xml의 TextView 객체에 Todo에 저장된 content 데이터 입력
         }
     }
 
