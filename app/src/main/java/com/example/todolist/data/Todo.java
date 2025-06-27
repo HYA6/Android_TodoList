@@ -1,15 +1,31 @@
 package com.example.todolist.data;
 
-public class Todo {
-    private String content; // 할 일 텍스트
-    private boolean done; // 할 일 끝냈는지 여부
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
-    public Todo(String content, boolean done) {
+@Entity(tableName = "todo_table")
+public class Todo {
+
+    @PrimaryKey(autoGenerate = true) // 기본키이며 자동 증가
+    private int id;
+
+    private String content;
+
+    private boolean isDone;
+
+    // 생성자
+    public Todo(String content, boolean isDone) {
         this.content = content;
-        this.done = done;
+        this.isDone = isDone;
     }
 
+    // getter, setter
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+
     public String getContent() { return content; }
-    public boolean isDone() { return done; }
-    public void setDone(boolean done) { this.done = done; }
+    public void setContent(String content) { this.content = content; }
+
+    public boolean isDone() { return isDone; }
+    public void setDone(boolean done) { isDone = done; }
 }
