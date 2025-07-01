@@ -48,8 +48,8 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
         /*
         LayoutInflater: XML 레이아웃 파일을 Java에서 사용할 수 있는 View 객체로 바꿔주는 클래스
             - inflate(): XML 레이아웃을 실제 View로 생성하는 메소드
-            - Activity 내부에서는 setContentView 메소드를 통해 자동으로 인플레이트, 하지만 Fragment나 RecyclerView에서는 수동으로 직접 인플레이트
-         */
+            - Activity 내부에서는 setContentView 메소드를 통해 자동으로 inflate, 하지만 Fragment나 RecyclerView에서는 수동으로 직접 inflate
+        */
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_todo, parent, false);
         return new TodoViewHolder(view);
