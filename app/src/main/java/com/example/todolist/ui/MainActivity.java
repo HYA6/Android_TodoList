@@ -1,6 +1,8 @@
 package com.example.todolist.ui;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +19,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.todolist.R;
 import com.example.todolist.data.Todo;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,10 +38,12 @@ MVVM 패턴: Model-View-ViewModel 패턴
 public class MainActivity extends AppCompatActivity {
 
     private EditText editTextTodo;
-    private Button buttonAdd;
     private RecyclerView recyclerView;
     private TodoViewModel viewModel;
     private TodoAdapter adapter;
+    private Button buttonAdd;
+    private Button buttonDelete;
+
 
     // 메모리 내 임시 리스트 (Room 없이)
     private List<Todo> todoList = new ArrayList<>();
@@ -49,10 +58,11 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerViewTodos);
         editTextTodo = findViewById(R.id.editTextTodo);
         buttonAdd = findViewById(R.id.buttonAdd);
-        recyclerView = findViewById(R.id.recyclerViewTodos);
 
         // RecyclerView 설정
-        adapter = new TodoAdapter(todoList);
+        adapter = new TodoAdapter(new ArrayList<>(), todo -> {
+            viewModel.delete(todo); // 콜백 처리: ViewModel 통해 삭제
+        });
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
@@ -78,5 +88,29 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        // DB 내보내기 버튼 클릭 시 실행
+        Button btnExport = findViewById(R.id.buttonExport);
+        btnExport.setOnClickListener(v -> exportDatabase(MainActivity.this));
+    }
+
+    // DB 데이터 내보내는 메소드
+    public void exportDatabase(Context context) {
+        File dbFile = context.getDatabasePath("todo_database");  // ← 실제 DB 이름
+        File exportDir = context.getExternalFilesDir(null); // 앱 외부 저장소
+
+        if (exportDir != null && !exportDir.exists()) {
+            exportDir.mkdirs();
+        }
+
+        File outFile = new File(exportDir, "todo_database_copy.db");
+
+        try (FileChannel src = new FileInputStream(dbFile).getChannel();
+             FileChannel dst = new FileOutputStream(outFile).getChannel()) {
+            dst.transferFrom(src, 0, src.size());
+            Log.d("EXPORT", "DB exported to: " + outFile.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -3,6 +3,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -14,11 +15,15 @@ import com.example.todolist.data.Todo;
 
 import java.util.List;
 public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder> {
+    // 외부(MainActivity)로 삭제 이벤트를 전달하기 위한 콜백 인터페이스
+    public interface OnTodoDeleteListener { void onDelete(Todo todo); }
     private List<Todo> todoList; // 할 일 목록 데이터 리스트
+    private OnTodoDeleteListener deleteListener;
 
     // 생성자: 데이터 받기
-    public TodoAdapter(List<Todo> todoList) {
+    public TodoAdapter(List<Todo> todoList, OnTodoDeleteListener deleteListener) {
         this.todoList = todoList;
+        this.deleteListener = deleteListener;
     }
 
     // ViewHolder 정의 (아이템 하나당 뷰 참조를 저장)
@@ -26,17 +31,22 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
     public static class TodoViewHolder extends RecyclerView.ViewHolder {
         CheckBox checkBox;
         TextView textView;
+        Button btnDelete;
 
         public TodoViewHolder(@NonNull View view) {
             super(view);
             checkBox = view.findViewById(R.id.checkBoxDone); // item_todo.xml의 CheckBox 객체
             textView = view.findViewById(R.id.textViewContent); // item_todo.xml의 TextView 객체
+            btnDelete = view.findViewById(R.id.buttonDelete); // item_todo.xml의 Button(Delete) 객체
         }
 
         //bind() 함수는 해당 줄의 Todo 데이터를 화면에 세팅
-        public void bind(Todo todo) {
+        public void bind(Todo todo, OnTodoDeleteListener deleteListener) {
             textView.setText(todo.getContent()); // item_todo.xml의 CheckBox 객체에 Todo에 저장된 done 데이터 입력
             checkBox.setChecked(todo.isDone()); // item_todo.xml의 TextView 객체에 Todo에 저장된 content 데이터 입력
+            btnDelete.setOnClickListener(v -> {
+                if (deleteListener != null) deleteListener.onDelete(todo);
+            });
         }
     }
 
@@ -60,7 +70,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
     @Override
     public void onBindViewHolder(@NonNull TodoViewHolder holder, int position) {
         Todo todo = todoList.get(position);
-        holder.bind(todo);
+        holder.bind(todo, deleteListener);
     }
 
     // RecyclerView가 아이템 몇 개 있는지 알아야 하므로 이 메소드가 필수

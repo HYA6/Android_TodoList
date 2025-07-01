@@ -27,6 +27,11 @@
             android:background="#20B2AA"
             android:text="추가"
             android:layout_weight="2"/>
+        <Button
+            android:id="@+id/buttonExport"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DB 내보내기"/>
     </LinearLayout>
 
     <!--
