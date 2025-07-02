@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "todo_table")
 public class Todo {
 
-    @PrimaryKey(autoGenerate = true) // 기본키이며 자동 증가
+    @PrimaryKey(autoGenerate = true) // 기본키, 자동 증가
     private int id;
 
     private String content;

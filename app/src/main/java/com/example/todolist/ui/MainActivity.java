@@ -42,10 +42,9 @@ public class MainActivity extends AppCompatActivity {
     private TodoViewModel viewModel;
     private TodoAdapter adapter;
     private Button buttonAdd;
-    private Button buttonDelete;
 
 
-    // 메모리 내 임시 리스트 (Room 없이)
+    // 메모리 내 임시 리스트
     private List<Todo> todoList = new ArrayList<>();
 
     @Override
@@ -58,21 +57,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerViewTodos);
         editTextTodo = findViewById(R.id.editTextTodo);
         buttonAdd = findViewById(R.id.buttonAdd);
-
-        // RecyclerView 설정
-        adapter = new TodoAdapter(new ArrayList<>(), todo -> {
-            viewModel.delete(todo); // 콜백 처리: ViewModel 통해 삭제
-        });
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
-
         // ViewModel 연결
         viewModel = new ViewModelProvider(this).get(TodoViewModel.class);
-
-        // LiveData 옵저빙
-        viewModel.getAllTodos().observe(this, todos -> {
-            adapter.setTodoList(todos); // RecyclerView 데이터 갱신
-        });
 
         // 추가 버튼 클릭 이벤트
         buttonAdd.setOnClickListener(new View.OnClickListener() {
@@ -87,6 +73,22 @@ public class MainActivity extends AppCompatActivity {
                     editTextTodo.setText(""); // 입력창 초기화
                 }
             }
+        });
+
+        // Adapter 설정
+        adapter = new TodoAdapter(new ArrayList<>());
+        adapter.setOnDeleteClickListener(todo -> viewModel.delete(todo)); // 삭제
+        adapter.setOnCheckedChangeListener((todo, isChecked) -> { // 체크 여부
+            todo.setDone(isChecked);
+            viewModel.update(todo);
+        });
+        // RecyclerView 설정
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
+
+        // LiveData 옵저빙
+        viewModel.getAllTodos().observe(this, todos -> {
+            adapter.setTodoList(todos); // RecyclerView 데이터 갱신
         });
 
         // DB 내보내기 버튼 클릭 시 실행
