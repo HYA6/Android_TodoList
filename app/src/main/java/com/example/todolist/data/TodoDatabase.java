@@ -47,8 +47,9 @@ public abstract class TodoDatabase extends RoomDatabase {
         if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(),
                             TodoDatabase.class, "todo_database")
-                    .fallbackToDestructiveMigration() // 버전 바뀌었을 때 DB 날리고 다시 생성 (초기 개발 단계에서 사용)
-                    .build();
+                            .setJournalMode(RoomDatabase.JournalMode.TRUNCATE) // WAL 비활성화 (빠른 확인용으로 개발 시에만 적용, 실제 배포할 때에는 WAL 활성화하기)
+                            .fallbackToDestructiveMigration() // 버전 바뀌었을 때 DB 날리고 다시 생성 (초기 개발 단계에서 사용)
+                            .build();
         }
         return instance;
     }
