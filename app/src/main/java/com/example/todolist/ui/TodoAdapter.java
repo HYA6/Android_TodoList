@@ -27,31 +27,26 @@ Adapter: RecyclerView와 데이터 사이에서 화면에 표시될 아이템을
 public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder> {
     private List<Todo> todoList; // 할 일 목록 데이터 리스트
 
-    // 생성자: 데이터 초기화
-    public TodoAdapter(List<Todo> todoList) {
-        this.todoList = todoList;
-    }
-
     /* ===========================================Listener========================================== */
     // 외부(MainActivity)로 이벤트를 전달하기 위한 콜백 인터페이스
     public interface OnTodoDeleteListener { void onDelete(Todo todo); } // 삭제
     public interface OnTodoCheckedChangeListener { void onCheckedChange(Todo todo, boolean isChecked); } // 체크(완료) 여부
 
-    // 리스터 객체
-    private OnTodoDeleteListener deleteListener; // 삭제
-    private OnTodoCheckedChangeListener checkListener; // 체크
+    // 리스너 객체
+    private final OnTodoDeleteListener deleteListener; // 삭제
+    private final OnTodoCheckedChangeListener checkListener; // 체크
 
-    // 리스너 처리 메소드
-    /*
-     생성자에서 한 번에 처리할 수도 있지만 나눠 쓰는 방식을 선호
-     이유: 가독성과 유지보수 용이성, 단일 책임 원칙 (SRP), 확장성과 재사용성
-    */
-    public void setOnDeleteClickListener(OnTodoDeleteListener listener) {
-        this.deleteListener = listener;
+    // 생성자: 데이터 초기화
+    // 자주 쓰는 리스너는 생성자에 고정적으로 받는 것이 가독성과 안전성 면에서 좋고, 옵션적인 리스너는 setter로 설정해주는 방식이 유지보수에 좋음
+    // 생성자와 분리하여 처리하는 방식: 가독성과 유지보수 용이, 단일 책임 원칙 (SRP), 확장성과 재사용성
+    public TodoAdapter(List<Todo> todoList,
+                       OnTodoDeleteListener deleteListener,
+                       OnTodoCheckedChangeListener checkListener) {
+        this.todoList = todoList;
+        this.deleteListener = deleteListener;
+        this.checkListener = checkListener;
     }
-    public void setOnCheckedChangeListener(OnTodoCheckedChangeListener listener) {
-        this.checkListener = listener;
-    }
+
 
     /* ===========================================ViewHolder========================================== */
     // ViewHolder 정의 (아이템 하나당 뷰 참조를 저장)
@@ -69,12 +64,10 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
         }
 
         //bind() 함수는 해당 줄의 Todo 데이터를 화면에 세팅
-        public void bind(Todo todo, OnTodoDeleteListener deleteListener) {
+        public void bind(Todo todo) {
             textView.setText(todo.getContent()); // item_todo.xml의 CheckBox 객체에 Todo에 저장된 content 데이터 입력
+            checkBox.setOnCheckedChangeListener(null); // 리스너 초기화 (중복 방지)
             checkBox.setChecked(todo.isDone()); // item_todo.xml의 TextView 객체에 Todo에 저장된 done 데이터 입력
-            btnDelete.setOnClickListener(v -> {
-                if (deleteListener != null) deleteListener.onDelete(todo);
-            });
         }
     }
 
@@ -94,11 +87,19 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
     }
 
     // RecyclerView가 특정 위치의 데이터를 화면에 표시할 때 호출
-    // 해당 위치의 Todo 객체를 꺼내서 bind()로 View에 반영
+    // bind(): UI에 집중, onBindViewHolder(): 이벤트 처리 집중 (이유: 중복 방지 및 명확한 역할 분리)
     @Override
     public void onBindViewHolder(@NonNull TodoViewHolder holder, int position) {
         Todo todo = todoList.get(position);
-        holder.bind(todo, deleteListener);
+        holder.bind(todo); // UI에 데이터 바인딩
+
+        // 이벤트 처리 (각 줄마다 처리 필요)
+        holder.btnDelete.setOnClickListener(v -> {
+            if (deleteListener != null) deleteListener.onDelete(todo); // 삭제 리스너 콜백 실행
+        });
+        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (checkListener != null) checkListener.onCheckedChange(todo, isChecked); // 체크 리스너 콜백 실행
+        });
     }
 
     // RecyclerView가 아이템 몇 개 있는지 알아야 하므로 이 메소드가 필수

@@ -76,12 +76,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Adapter 설정
-        adapter = new TodoAdapter(new ArrayList<>());
-        adapter.setOnDeleteClickListener(todo -> viewModel.delete(todo)); // 삭제
-        adapter.setOnCheckedChangeListener((todo, isChecked) -> { // 체크 여부
-            todo.setDone(isChecked);
-            viewModel.update(todo);
-        });
+        adapter = new TodoAdapter( new ArrayList<>(),
+                todo -> viewModel.delete(todo), // 삭제
+                (todo, isChecked) -> { // 체크여부
+                    todo.setDone(isChecked);
+                    viewModel.update(todo);
+                }
+        );
         // RecyclerView 설정
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
