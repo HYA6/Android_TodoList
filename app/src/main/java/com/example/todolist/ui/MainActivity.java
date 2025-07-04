@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -81,7 +82,29 @@ public class MainActivity extends AppCompatActivity {
                 (todo, isChecked) -> { // 체크여부
                     todo.setDone(isChecked);
                     viewModel.update(todo);
-                }
+                },
+                todo -> {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle("할 일 수정");
+
+                    // 입력창 생성
+                    final EditText input = new EditText(MainActivity.this);
+                    input.setText(todo.getContent()); // 기존 내용 설정
+                    builder.setView(input);
+
+                    // [수정] 버튼 클릭 시
+                    builder.setPositiveButton("수정", (dialog, which) -> {
+                        String newContent = input.getText().toString().trim();
+                        if (!newContent.isEmpty()) {
+                            todo.setContent(newContent); // 내용 수정
+                            viewModel.update(todo);     // DB 반영
+                        }
+                    });
+
+                    // [취소] 버튼 클릭 시
+                    builder.setNegativeButton("취소", (dialog, which) -> dialog.dismiss());
+                    builder.show();
+                } // 수정
         );
         // RecyclerView 설정
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

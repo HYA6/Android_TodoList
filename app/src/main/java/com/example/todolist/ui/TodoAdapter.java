@@ -31,20 +31,24 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
     // 외부(MainActivity)로 이벤트를 전달하기 위한 콜백 인터페이스
     public interface OnTodoDeleteListener { void onDelete(Todo todo); } // 삭제
     public interface OnTodoCheckedChangeListener { void onCheckedChange(Todo todo, boolean isChecked); } // 체크(완료) 여부
+    public interface OnTodoEditListener { void onEdit(Todo todo); } // 수정
 
     // 리스너 객체
     private final OnTodoDeleteListener deleteListener; // 삭제
     private final OnTodoCheckedChangeListener checkListener; // 체크
+    private final OnTodoEditListener editListener; // 수정
 
     // 생성자: 데이터 초기화
     // 자주 쓰는 리스너는 생성자에 고정적으로 받는 것이 가독성과 안전성 면에서 좋고, 옵션적인 리스너는 setter로 설정해주는 방식이 유지보수에 좋음
     // 생성자와 분리하여 처리하는 방식: 가독성과 유지보수 용이, 단일 책임 원칙 (SRP), 확장성과 재사용성
     public TodoAdapter(List<Todo> todoList,
                        OnTodoDeleteListener deleteListener,
-                       OnTodoCheckedChangeListener checkListener) {
+                       OnTodoCheckedChangeListener checkListener,
+                       OnTodoEditListener editListener) {
         this.todoList = todoList;
         this.deleteListener = deleteListener;
         this.checkListener = checkListener;
+        this.editListener = editListener;
     }
 
 
@@ -55,12 +59,14 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
         CheckBox checkBox;
         TextView textView;
         Button btnDelete;
+        Button btnEdit;
 
         public TodoViewHolder(@NonNull View view) {
             super(view);
             checkBox = view.findViewById(R.id.checkBoxDone); // item_todo.xml의 CheckBox 객체
             textView = view.findViewById(R.id.textViewContent); // item_todo.xml의 TextView 객체
             btnDelete = view.findViewById(R.id.buttonDelete); // item_todo.xml의 Button(Delete) 객체
+            btnEdit = view.findViewById(R.id.buttonEdit); // item_todo.xml의 Button(Edit) 객체
         }
 
         //bind() 함수는 해당 줄의 Todo 데이터를 화면에 세팅
@@ -99,6 +105,9 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
         });
         holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (checkListener != null) checkListener.onCheckedChange(todo, isChecked); // 체크 리스너 콜백 실행
+        });
+        holder.btnEdit.setOnClickListener(v -> { // 수정 리스너 콜백 실행
+            if (editListener != null) editListener.onEdit(todo);
         });
     }
 
