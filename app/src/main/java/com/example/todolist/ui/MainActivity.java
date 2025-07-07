@@ -1,33 +1,43 @@
 package com.example.todolist.ui;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CalendarView;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ToggleButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todolist.R;
 import com.example.todolist.data.Todo;
+import com.google.android.material.tabs.TabLayout;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
 /*
 MVVM 패턴: Model-View-ViewModel 패턴
     - Model: 데이터, 비즈니스 로직 담당 (ex.Room DB, Repository, API 등)
@@ -43,10 +53,10 @@ public class MainActivity extends AppCompatActivity {
     private TodoViewModel viewModel;
     private TodoAdapter adapter;
     private Button buttonAdd;
+    private ToggleButton btnToggle;
+    private CalendarView calendarView;
+    private String selectDate;
 
-
-    // 메모리 내 임시 리스트
-    private List<Todo> todoList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,20 +65,49 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main); // activity_main 연결
 
         // UI 초기화
+        btnToggle = findViewById(R.id.buttonDate);
+        calendarView = findViewById(R.id.calendarViewTodo);
+        calendarView.setVisibility(View.GONE); // 달력 안보이게
         recyclerView = findViewById(R.id.recyclerViewTodos);
         editTextTodo = findViewById(R.id.editTextTodo);
         buttonAdd = findViewById(R.id.buttonAdd);
         // ViewModel 연결
         viewModel = new ViewModelProvider(this).get(TodoViewModel.class);
 
+        // 달력 표시 토글
+        btnToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean status) {
+                if(status){
+                    calendarView.setVisibility(View.VISIBLE);
+                }else{
+                    calendarView.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        // 선택한 날짜
+        calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
+            selectDate = String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth);
+        });
+
         // 추가 버튼 클릭 이벤트
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String content = editTextTodo.getText().toString().trim();
-                if (!content.isEmpty()) {
+                if (selectDate == null || content.isEmpty()) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle("추가 불가")
+                            .setMessage("날짜가 선택되지 않았거나 내용이 입력되지 않았습니다.")
+                            .setNeutralButton("닫기", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dlg, int sumthin) {
+                                }
+                            })
+                            .show(); // 팝업창 보여줌
+                } else {
                     // 새 할 일 객체 추가
-                    Todo todo = new Todo(content, false);
+                    Todo todo = new Todo(content, false, selectDate);
                     viewModel.insert(todo); // DB에 추가 -> LiveData 자동 갱신
                     // 입력창 비우기
                     editTextTodo.setText(""); // 입력창 초기화
@@ -116,27 +155,27 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // DB 내보내기 버튼 클릭 시 실행
-        Button btnExport = findViewById(R.id.buttonExport);
-        btnExport.setOnClickListener(v -> exportDatabase(MainActivity.this));
+//        Button btnExport = findViewById(R.id.buttonExport);
+//        btnExport.setOnClickListener(v -> exportDatabase(MainActivity.this));
     }
 
     // DB 데이터 내보내는 메소드
-    public void exportDatabase(Context context) {
-        File dbFile = context.getDatabasePath("todo_database");  // ← 실제 DB 이름
-        File exportDir = context.getExternalFilesDir(null); // 앱 외부 저장소
-
-        if (exportDir != null && !exportDir.exists()) {
-            exportDir.mkdirs();
-        }
-
-        File outFile = new File(exportDir, "todo_database_copy.db");
-
-        try (FileChannel src = new FileInputStream(dbFile).getChannel();
-             FileChannel dst = new FileOutputStream(outFile).getChannel()) {
-            dst.transferFrom(src, 0, src.size());
-            Log.d("EXPORT", "DB exported to: " + outFile.getAbsolutePath());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    public void exportDatabase(Context context) {
+//        File dbFile = context.getDatabasePath("todo_database");  // ← 실제 DB 이름
+//        File exportDir = context.getExternalFilesDir(null); // 앱 외부 저장소
+//
+//        if (exportDir != null && !exportDir.exists()) {
+//            exportDir.mkdirs();
+//        }
+//
+//        File outFile = new File(exportDir, "todo_database_copy.db");
+//
+//        try (FileChannel src = new FileInputStream(dbFile).getChannel();
+//             FileChannel dst = new FileOutputStream(outFile).getChannel()) {
+//            dst.transferFrom(src, 0, src.size());
+//            Log.d("EXPORT", "DB exported to: " + outFile.getAbsolutePath());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

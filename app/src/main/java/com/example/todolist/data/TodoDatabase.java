@@ -39,7 +39,8 @@ Room: Android 공식 ORM(Object-Relational Mapping), SQLite 기반 DB
                 }
 */
 
-@Database(entities = {Todo.class}, version = 1) // Entity 설정
+// DB 스키마를 바꾸면 버전 바꿔야 함 (Room 특징)
+@Database(entities = {Todo.class}, version = 2) // Entity 설정
 public abstract class TodoDatabase extends RoomDatabase {
     private static TodoDatabase instance;
     public abstract TodoDAO todoDAO();

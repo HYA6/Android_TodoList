@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,14 +10,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginTop="40dp"
-        >
+        android:orientation="horizontal">
         <EditText
             android:id="@+id/editTextTodo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="할 일을 입력하세요"
+            android:hint="할 일을 입력하세요"
             android:textAlignment="center"
             android:layout_weight="1"
             android:layout_marginRight="10dp"/>
@@ -25,13 +24,29 @@
             android:id="@+id/buttonAdd"
             android:layout_width="35dp"
             android:layout_height="35dp"
+            android:layout_gravity="center"
             android:background="@drawable/btn_add"/>
-        <Button
-            android:id="@+id/buttonExport"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="DB 내보내기"/>
+        <ToggleButton
+            android:id="@+id/buttonDate"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:background="@drawable/btn_calender_add"
+            android:textOn=""
+            android:textOff=""/>
+<!--        <Button-->
+<!--            android:id="@+id/buttonExport"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:text="DB 내보내기"/>-->
     </LinearLayout>
+
+    <CalendarView
+        android:id="@+id/calendarViewTodo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 
     <!--
     Recyclerview: View를 재사용하는 Viewgroup

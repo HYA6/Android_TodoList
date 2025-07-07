@@ -17,6 +17,9 @@ public interface TodoDAO {
     void update(Todo todo);
     @Delete
     void delete(Todo todo);
-    @Query("SELECT * FROM todo_table ORDER BY id DESC")
-    LiveData<List<Todo>> getAllTodos(); // 실시간으로 변경되는 데이터 감지
+
+    // 실시간으로 변경되는 데이터 감지 (가까운 날짜 순으로 정렬)
+    @Query("SELECT * FROM todo_table ORDER BY date")
+    LiveData<List<Todo>> getAllTodos();
+
 }
