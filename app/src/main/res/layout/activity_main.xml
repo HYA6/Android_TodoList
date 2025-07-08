@@ -7,46 +7,76 @@
     android:orientation="vertical"
     android:padding="10dp">
 
+<!--    <Button-->
+<!--        android:id="@+id/buttonExport"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:text="DB 내보내기"/>-->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:orientation="horizontal">
-        <EditText
-            android:id="@+id/editTextTodo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="할 일을 입력하세요"
-            android:textAlignment="center"
-            android:layout_weight="1"
-            android:layout_marginRight="10dp"/>
         <Button
-            android:id="@+id/buttonAdd"
+            android:id="@+id/buttonStartDate"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:layout_gravity="center"
-            android:background="@drawable/btn_add"/>
-        <ToggleButton
-            android:id="@+id/buttonDate"
+            android:background="@drawable/btn_calender_add"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="시작일: "/>
+        <TextView
+            android:id="@+id/startDateText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/tealGreen"
+            android:layout_weight="1"
+            android:text="날짜를 선택하세요"/>
+        <Button
+            android:id="@+id/buttonEndDate"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:layout_gravity="center"
-            android:background="@drawable/btn_calender_add"
-            android:textOn=""
-            android:textOff=""/>
-<!--        <Button-->
-<!--            android:id="@+id/buttonExport"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:text="DB 내보내기"/>-->
+            android:background="@drawable/btn_calender_add"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="마감일: "/>
+        <TextView
+            android:id="@+id/endDateText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/tealGreen"
+            android:layout_weight="1"
+            android:text="날짜를 선택하세요"/>
     </LinearLayout>
 
-    <CalendarView
-        android:id="@+id/calendarViewTodo"
+    <EditText
+        android:id="@+id/editTextTodo"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:hint="할 일을 입력하세요"
+        android:textAlignment="center"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+        <Button
+            android:id="@+id/buttonAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/lightSlateGray"
+            android:textStyle="bold"
+            android:text="일정추가"/>
+    </LinearLayout>
 
     <!--
     Recyclerview: View를 재사용하는 Viewgroup
@@ -60,6 +90,5 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewTodos"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="5dp"/>
+        android:layout_height="match_parent"/>
 </LinearLayout>

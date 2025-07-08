@@ -56,16 +56,18 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
     // ViewHolder 정의 (아이템 하나당 뷰 참조를 저장)
     // RecyclerView의 한 줄(item_todo.xml)을 참조해서 보관하는 객체
     public static class TodoViewHolder extends RecyclerView.ViewHolder {
-        CheckBox checkBox;
-        TextView textViewDate;
-        TextView textViewContent;
-        Button btnDelete;
-        Button btnEdit;
+        CheckBox checkBox; // 체크 박스
+        TextView textViewContent; // 할 일 내용
+        TextView startDateView; // 시작일 나올 텍스트 view
+        TextView endDateView; // 마감일 나올 텍스트 view
+        Button btnEdit; // 수정 버튼
+        Button btnDelete; // 삭제 버튼
 
         public TodoViewHolder(@NonNull View view) {
             super(view);
             checkBox = view.findViewById(R.id.checkBoxDone); // item_todo.xml의 CheckBox 객체
-            textViewDate = view.findViewById(R.id.textViewDate); // item_todo.xml의 textViewDate 객체
+            startDateView = view.findViewById(R.id.startDateView); // item_todo.xml의 startDateView 객체
+            endDateView = view.findViewById(R.id.endDateView); // item_todo.xml의 endDateView 객체
             textViewContent = view.findViewById(R.id.textViewContent); // item_todo.xml의 textViewContent 객체
             btnDelete = view.findViewById(R.id.buttonDelete); // item_todo.xml의 Button(Delete) 객체
             btnEdit = view.findViewById(R.id.buttonEdit); // item_todo.xml의 Button(Edit) 객체
@@ -74,9 +76,10 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
         //bind() 함수는 해당 줄의 Todo 데이터를 화면에 세팅
         public void bind(Todo todo) {
             checkBox.setOnCheckedChangeListener(null); // 리스너 초기화 (중복 방지)
-            checkBox.setChecked(todo.isDone()); // item_todo.xml의 TextView 객체에 Todo에 저장된 done 데이터 입력
-            textViewDate.setText(todo.getDate()); // item_todo.xml의 CheckBox 객체에 Todo에 저장된 date 데이터 입력
-            textViewContent.setText(todo.getContent()); // item_todo.xml의 CheckBox 객체에 Todo에 저장된 content 데이터 입력
+            checkBox.setChecked(todo.isDone()); // item_todo.xml의 CheckBox 객체에 Todo에 저장된 done 데이터 입력
+            textViewContent.setText(todo.getContent()); // item_todo.xml의 textViewContent 객체에 Todo에 저장된 content 데이터 입력
+            startDateView.setText(todo.getStartDate()); // item_todo.xml의 startDateView 객체에 Todo에 저장된 startDate 데이터 입력
+            endDateView.setText(todo.getEndDate()); // item_todo.xml의 endDateView 객체에 Todo에 저장된 endDate 데이터 입력
         }
     }
 

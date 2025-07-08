@@ -18,8 +18,8 @@ public interface TodoDAO {
     @Delete
     void delete(Todo todo);
 
-    // 실시간으로 변경되는 데이터 감지 (가까운 날짜 순으로 정렬)
-    @Query("SELECT * FROM todo_table ORDER BY date")
+    // 실시간으로 변경되는 데이터 감지 (마감일 가까운 순으로 정렬)
+    @Query("SELECT * FROM todo_table ORDER BY endDate")
     LiveData<List<Todo>> getAllTodos();
 
 }

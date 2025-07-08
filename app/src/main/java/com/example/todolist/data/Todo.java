@@ -14,13 +14,15 @@ public class Todo {
     private int id;
     private String content; // 내용
     private boolean isDone; // 체크 여부
-    private String date; // 시간
+    private String startDate; // 시작일
+    private String endDate; // 마감일
 
     // 생성자
-    public Todo(String content, boolean isDone, String date) {
+    public Todo(String content, boolean isDone, String startDate, String endDate) {
         this.content = content;
         this.isDone = isDone;
-        this.date = date;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     private String formatDate(Date date) {
@@ -37,6 +39,9 @@ public class Todo {
     public boolean isDone() { return isDone; }
     public void setDone(boolean done) { isDone = done; }
 
-    public String getDate() { return date; }
-    public void setDate(String date) { this.date = date; }
+    public String getStartDate() { return startDate; }
+    public void setStartDate(String startDate) { this.startDate = startDate; }
+
+    public String getEndDate() { return endDate; }
+    public void setEndDate(String endDate) { this.endDate = endDate; }
 }
